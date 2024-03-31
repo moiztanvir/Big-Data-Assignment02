@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 import sys
+import ast
 
 # Initialize variables
-current_article_id = None
 tf_representation = {}
 
 def calculate_ratio(set1, set2):
-    intersection = len(set(set1).intersection(set(set2)))
-    union = len(set(set1).union(set(set2)))
+    intersection = len(set1.intersection(set2))
+    union = len(set1.union(set2))
     if union == 0:
         return 0
     return intersection / union
@@ -29,13 +29,15 @@ def compare_sets(dict_data):
         result[key1] = ratios
     return result
 
-result = {}
 # Read input from standard input (stdin)
 for line in sys.stdin:
     # Split the input line into article_id and word_id:frequency
     article_id, word_frequency = line.strip().split('\t')
-    tf_representation[article_id] = word_frequency
-    result = compare_sets(tf_representation)
+    # Convert string representation of set to actual set
+    tf_representation[article_id] = ast.literal_eval(word_frequency)
+
+# Compare sets after all data has been read
+result = compare_sets(tf_representation)
 
 for i, j in result.items():
     print(f"{i}\t{j}")
